@@ -23,13 +23,13 @@ const forgotPassword = async (req, res) => {
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = Date.now() + 3600000; // 1 hour
+    const resetTokenExpiry = new Date(Date.now() + 3600000).toISOString().slice(0, 19).replace('T', ' '); // Convert to DATETIME format
 
-    // Save token and expiry to the database (implement in your model)
+    // Save token and expiry to the database
     await User.saveResetToken(user.id, resetToken, resetTokenExpiry);
 
     // Generate reset link
-    const resetLink = `https://admin.sungumskardu.com/ForgotPassword/${resetToken}`;
+    const resetLink = `http://localhost:5173/ForgotPassword/${resetToken}`;
 
     // Send email with reset link
     await transporter.sendMail({
